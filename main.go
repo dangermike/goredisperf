@@ -157,7 +157,8 @@ func concurrencyAction(ctx *cli.Context) error {
 				go func() {
 					client.Get("fake") // warm up client
 					defer wg.Done()
-					mykeys := keys[:]         // copy for safety
+					mykeys := make([]string, len(keys)) // copy for safety
+					copy(mykeys, keys)
 					for ix := range indices { // ix is the index where the duration will be written
 						shuffleKeys(mykeys)
 						start := time.Now()
@@ -242,7 +243,8 @@ func scatterAction(ctx *cli.Context) error {
 		go func() {
 			client.Get("fake") // warm up client
 			defer wgWorkers.Done()
-			mykeys := keys[:] // copy for safety
+			mykeys := make([]string, len(keys)) // copy for safety
+			copy(mykeys, keys)
 			for range indices {
 				keyCnt := minKeys
 				if keyRange > 0 {
